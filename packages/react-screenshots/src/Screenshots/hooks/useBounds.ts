@@ -4,7 +4,7 @@ import useDispatcher from './useDispatcher'
 import useStore from './useStore'
 
 export interface BoundsDispatcher {
-  set: (bounds: Bounds) => void
+  set: (bounds: Bounds, type?: string) => void
   reset: () => void
 }
 
@@ -15,8 +15,8 @@ export default function useBounds (): BoundsValueDispatcher {
   const { setBounds } = useDispatcher()
 
   const set = useCallback(
-    (bounds: Bounds) => {
-      setBounds?.(bounds)
+    (bounds: Bounds, type?:string) => {
+      setBounds?.({...bounds, type: type === 'move' ? 'move' : undefined})
     },
     [setBounds]
   )

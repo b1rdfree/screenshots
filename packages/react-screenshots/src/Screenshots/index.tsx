@@ -9,6 +9,7 @@ import ScreenshotsOperations from './ScreenshotsOperations'
 import { Bounds, Emiter, History } from './types'
 import useGetLoadedImage from './useGetLoadedImage'
 import zhCN, { Lang } from './zh_CN'
+import { useGetState } from 'ahooks'
 
 export interface ScreenshotsProps {
   url?: string
@@ -23,7 +24,7 @@ export default function Screenshots ({ url, width, height, lang, className, ...p
   const image = useGetLoadedImage(url)
   const canvasContextRef = useRef<CanvasRenderingContext2D>(null)
   const emiterRef = useRef<Emiter>({})
-  const [history, setHistory] = useState<History>({
+  const [history, setHistory, getHistory] = useGetState<History>({
     index: -1,
     stack: []
   })
@@ -61,6 +62,7 @@ export default function Screenshots ({ url, width, height, lang, className, ...p
   const dispatcher = {
     call,
     setHistory,
+    getHistory,
     setBounds,
     setCursor,
     setOperation

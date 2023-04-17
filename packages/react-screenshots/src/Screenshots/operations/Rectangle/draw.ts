@@ -3,7 +3,9 @@ import { HistoryItemSource } from '../../types'
 import { drawDragCircle } from '../utils'
 
 export function getEditedRectangleData (action: HistoryItemSource<RectangleData, RectangleEditData>) {
-  let { x1, y1, x2, y2 } = action.data
+  let { color, size, x1, y1, x2, y2 } = action.data
+
+  let isDel = false
 
   action.editHistory.forEach(({ data }) => {
     const x = data.x2 - data.x1
@@ -34,10 +36,16 @@ export function getEditedRectangleData (action: HistoryItemSource<RectangleData,
       x1 += x
       y1 += y
     }
+    size = data.size ? data.size : size
+    color = data.color ? data.color : color
+    isDel = data.isDel
   })
 
   return {
     ...action.data,
+    isDel,
+    size,
+    color,
     x1,
     x2,
     y1,
@@ -49,7 +57,10 @@ export default function draw (
   ctx: CanvasRenderingContext2D,
   action: HistoryItemSource<RectangleData, RectangleEditData>
 ) {
-  const { size, color, x1, y1, x2, y2 } = getEditedRectangleData(action)
+  const { size, color, isDel, x1, y1, x2, y2 } = getEditedRectangleData(action)
+
+  if(isDel) return
+
   ctx.lineCap = 'butt'
   ctx.lineJoin = 'miter'
   ctx.lineWidth = size

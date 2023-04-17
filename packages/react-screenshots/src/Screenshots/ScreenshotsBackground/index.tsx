@@ -18,7 +18,7 @@ export default memo(function ScreenshotsBackground (): ReactElement | null {
   const [position, setPosition] = useState<Position | null>(null)
 
   const updateBounds = useCallback(
-    (p1: Point, p2: Point) => {
+    (p1: Point, p2: Point, type?: string) => {
       if (!elRef.current) {
         return
       }
@@ -36,7 +36,8 @@ export default memo(function ScreenshotsBackground (): ReactElement | null {
           },
           width,
           height
-        )
+        ),
+        type
       )
     },
     [width, height, boundsDispatcher]
@@ -77,7 +78,7 @@ export default memo(function ScreenshotsBackground (): ReactElement | null {
       updateBounds(pointRef.current, {
         x: e.clientX,
         y: e.clientY
-      })
+      }, 'move')
       isMoveRef.current = true
     }
 
@@ -90,7 +91,7 @@ export default memo(function ScreenshotsBackground (): ReactElement | null {
         updateBounds(pointRef.current, {
           x: e.clientX,
           y: e.clientY
-        })
+        }, 'up')
       }
       pointRef.current = null
       isMoveRef.current = false

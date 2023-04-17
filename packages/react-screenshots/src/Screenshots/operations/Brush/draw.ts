@@ -3,10 +3,21 @@ import { HistoryItemSource } from '../../types'
 
 export default function draw (ctx: CanvasRenderingContext2D, action: HistoryItemSource<BrushData, BrushEditData>): void {
   const { size, color, points } = action.data
+  let setSize = size
+  let setColor = color
+  let isDel = false
+  for(let {data} of action.editHistory){
+    setSize = data.size ? data.size : setSize
+    setColor = data.color ? data.color : setColor
+    isDel = data.isDel
+  }
+
+  if(isDel) return
+
   ctx.lineCap = 'round'
   ctx.lineJoin = 'round'
-  ctx.lineWidth = size
-  ctx.strokeStyle = color
+  ctx.lineWidth = setSize
+  ctx.strokeStyle = setColor
 
   const distance = action.editHistory.reduce(
     (distance, { data }) => ({

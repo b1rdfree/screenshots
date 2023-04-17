@@ -22,11 +22,11 @@ export type HistoryValueDispatcher = [HistoryValue, HistoryDispatcher]
 
 export default function useHistory (): HistoryValueDispatcher {
   const { history } = useStore()
-  const { setHistory } = useDispatcher()
+  const { setHistory, getHistory } = useDispatcher()
 
   const push = useCallback(
     <S, E>(action: HistoryItem<S, E>) => {
-      const { index, stack } = history
+      const { index, stack } = getHistory ? getHistory() : history
 
       stack.forEach(item => {
         if (item.type === HistoryItemType.Source) {
@@ -124,13 +124,15 @@ export default function useHistory (): HistoryValueDispatcher {
   )
 
   const clearSelect = useCallback(() => {
-    history.stack.forEach(item => {
+    const list = getHistory ? getHistory() : history
+
+    list.stack.forEach(item => {
       if (item.type === HistoryItemType.Source) {
         item.isSelected = false
       }
     })
 
-    setHistory?.({ ...history })
+    setHistory?.({ ...list })
   }, [history, setHistory])
 
   const reset = useCallback(() => {

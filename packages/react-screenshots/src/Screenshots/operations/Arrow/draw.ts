@@ -3,7 +3,10 @@ import { HistoryItemSource } from '../../types'
 import { drawDragCircle } from '../utils'
 
 export function getEditedArrowData (action: HistoryItemSource<ArrowData, ArrowEditData>) {
-  let { x1, y1, x2, y2 } = action.data
+  let { color, size, x1, y1, x2, y2 } = action.data
+
+  let isDel = false
+
   action.editHistory.forEach(({ data }) => {
     const x = data.x2 - data.x1
     const y = data.y2 - data.y1
@@ -19,9 +22,15 @@ export function getEditedArrowData (action: HistoryItemSource<ArrowData, ArrowEd
       x2 += x
       y2 += y
     }
+    size = data.size ? data.size : size
+    color = data.color ? data.color : color
+    isDel = data.isDel
   })
   return {
     ...action.data,
+    isDel,
+    size,
+    color,
     x1,
     x2,
     y1,
@@ -30,7 +39,10 @@ export function getEditedArrowData (action: HistoryItemSource<ArrowData, ArrowEd
 }
 
 export default function draw (ctx: CanvasRenderingContext2D, action: HistoryItemSource<ArrowData, ArrowEditData>) {
-  const { size, color, x1, x2, y1, y2 } = getEditedArrowData(action)
+  const { size, color, isDel, x1, x2, y1, y2 } = getEditedArrowData(action)
+
+  if(isDel) return
+
   ctx.lineCap = 'round'
   ctx.lineJoin = 'bevel'
   ctx.lineWidth = size

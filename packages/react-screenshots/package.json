@@ -64,5 +64,8 @@
     "rimraf": "^4.4.1",
     "typescript": "^5.0.2",
     "vite": "^4.2.1"
+  },
+  "dependencies": {
+    "ahooks": "^3.7.6"
   }
 }

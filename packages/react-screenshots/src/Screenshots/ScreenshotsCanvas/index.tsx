@@ -19,6 +19,7 @@ import getBoundsByPoints from './getBoundsByPoints'
 import getPoints from './getPoints'
 import './index.less'
 import isPointInDraw from './isPointInDraw'
+import { useKeyPress } from 'ahooks'
 
 const borders = ['top', 'right', 'bottom', 'left']
 
@@ -119,7 +120,7 @@ export default memo(
     )
 
     const updateBounds = useCallback(
-      (e: MouseEvent) => {
+      (e: MouseEvent, type?: string) => {
         if (
           !resizeOrMoveRef.current ||
           !pointRef.current ||
@@ -142,10 +143,43 @@ export default memo(
             width,
             height,
             resizeOrMoveRef.current
-          )
+          ),
+          type
         )
       },
       [width, height, bounds, boundsDispatcher]
+    )
+
+    const onDoubleClick = useCallback(
+      (e: React.MouseEvent) => {
+        if (e.button !== 0 || !bounds) {
+          return
+        }
+        if (!operation) {
+          resizeOrMoveRef.current = "move"
+          pointRef.current = {
+            x: e.clientX,
+            y: e.clientY
+          }
+          boundsRef.current = {
+            x: bounds.x,
+            y: bounds.y,
+            width: bounds.width,
+            height: bounds.height
+          }
+        } else {
+          const draw = isPointInDraw(
+            bounds,
+            canvasRef.current,
+            history,
+            e.nativeEvent
+          )
+          if (draw) {
+            emiter.emit('doubleClick', draw, e.nativeEvent)
+          }
+        }
+      },
+      [bounds, operation, emiter, history]
     )
 
     useLayoutEffect(() => {
@@ -171,7 +205,7 @@ export default memo(
           ) {
             return
           }
-          updateBounds(e)
+          updateBounds(e, "move")
         } else {
           emiter.emit('mousemove', e)
         }
@@ -186,7 +220,7 @@ export default memo(
           ) {
             return
           }
-          updateBounds(e)
+          updateBounds(e, 'up')
           resizeOrMoveRef.current = undefined
           pointRef.current = null
           boundsRef.current = null
@@ -202,6 +236,16 @@ export default memo(
         window.removeEventListener('mouseup', onMouseUp)
       }
     }, [updateBounds, operation, emiter])
+
+    useKeyPress(
+      () => true,
+      (e) => {
+        if(e.code === "Backspace"){
+          emiter.emit('keyboardDel', e)
+        }
+      },
+      // { target: wrapperRef}
+    )
 
     // 放到最后，保证ctxRef.current存在
     useImperativeHandle<
@@ -246,6 +290,10 @@ export default memo(
             cursor
           }}
           onMouseDown={(e) => onMouseDown(e, 'move')}
+          onDoubleClick={(e) => {
+            e.stopPropagation()
+            onDoubleClick(e)
+          }}
         >
           {isCanResize && (
             <div className='screenshots-canvas-size'>

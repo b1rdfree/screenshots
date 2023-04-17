@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useRef, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useRef } from 'react'
 import useCanvasContextRef from '../../hooks/useCanvasContextRef'
 import useCanvasMousedown from '../../hooks/useCanvasMousedown'
 import useCanvasMousemove from '../../hooks/useCanvasMousemove'
@@ -13,6 +13,8 @@ import ScreenshotsSizeColor from '../../ScreenshotsSizeColor'
 import { HistoryItemEdit, HistoryItemSource, HistoryItemType } from '../../types'
 import { isHit, isHitCircle } from '../utils'
 import draw, { getEditedEllipseData } from './draw'
+import { useGetState, useMemoizedFn } from 'ahooks'
+import useCanvasKeyboardDel from '../../hooks/useCanvasDel'
 
 export interface EllipseData {
   size: number
@@ -41,6 +43,9 @@ export interface EllipseEditData {
   y1: number
   x2: number
   y2: number
+  size: number
+  color: string
+  isDel: boolean
 }
 
 export default function Ellipse (): ReactElement {
@@ -49,8 +54,10 @@ export default function Ellipse (): ReactElement {
   const [operation, operationDispatcher] = useOperation()
   const [, cursorDispatcher] = useCursor()
   const canvasContextRef = useCanvasContextRef()
-  const [size, setSize] = useState(3)
-  const [color, setColor] = useState('#ee5126')
+  const [size, setSize, getSize] = useGetState(3)
+  const cacheSizeRef = useRef<number>(3)
+  const [color, setColor, getColor] = useGetState('#ee5126')
+  const cacheColorRef = useRef<string>("#ee5126")
   const ellipseRef = useRef<HistoryItemSource<EllipseData, EllipseEditData> | null>(null)
   const ellipseEditRef = useRef<HistoryItemEdit<EllipseEditData, EllipseData> | null>(null)
 
@@ -140,6 +147,11 @@ export default function Ellipse (): ReactElement {
         type = EllipseEditType.ResizeLeftTop
       }
 
+      const length = source.editHistory.length
+      const color: string = length > 0 ? source.editHistory[length - 1].data.color : source.data.color;
+      const size: number = length > 0 ? source.editHistory[length - 1].data.size : source.data.size;
+      const isDel: boolean = length > 0 ? source.editHistory[length - 1].data.isDel : false;
+
       ellipseEditRef.current = {
         type: HistoryItemType.Edit,
         data: {
@@ -147,7 +159,10 @@ export default function Ellipse (): ReactElement {
           x1: e.clientX,
           y1: e.clientY,
           x2: e.clientX,
-          y2: e.clientY
+          y2: e.clientY,
+          color,
+          size,
+          isDel
         },
         source
       }
@@ -228,10 +243,100 @@ export default function Ellipse (): ReactElement {
     ellipseEditRef.current = null
   }, [checked, historyDispatcher])
 
+  const seletedRectangleRef = useRef<HistoryItemEdit<
+    EllipseEditData,
+    EllipseData
+  > | null>(null);
+  useEffect(() => {
+    const arr = history.stack
+      .filter((item) => item.type === HistoryItemType.Source)
+      .filter((item) => !!(item as HistoryItemSource<any, any>)?.isSelected)
+      .filter(
+        (item) => (item as HistoryItemSource<any, any>)?.name === "Ellipse"
+      );
+    if (arr.length > 0) {
+      const infoRectangle = arr[0] as HistoryItemSource<
+        EllipseData,
+        EllipseEditData
+      >;
+      const length = infoRectangle.editHistory.length
+      let size = length > 0 ? infoRectangle.editHistory[length - 1].data.size : infoRectangle.data.size;
+      let color = length > 0 ? infoRectangle.editHistory[length - 1].data.color : infoRectangle.data.color;
+      let isDel = length > 0 ? infoRectangle.editHistory[length - 1].data.isDel : false;
+      let editPosition: EllipseEditData = {
+        type: 0,
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
+        color: color,
+        size: size,
+        isDel: isDel
+      };
+
+      seletedRectangleRef.current = {
+        type: HistoryItemType.Edit,
+        data: JSON.parse(JSON.stringify(editPosition)),
+        source: arr[0] as HistoryItemSource<EllipseData, EllipseEditData>,
+      };
+      setSize(editPosition.size)
+      setColor(editPosition.color)
+    } else {
+      seletedRectangleRef.current = null;
+      setSize(cacheSizeRef.current)
+      setColor(cacheColorRef.current)
+    }
+  }, [history]);
+
+  const onSize = useMemoizedFn((size: number) => {
+    if (getSize() === size) return;
+    setSize(size);
+
+    if (!checked) return;
+    if (seletedRectangleRef.current) {
+      seletedRectangleRef.current.data.size = size;
+      seletedRectangleRef.current.source.editHistory.push(
+        seletedRectangleRef.current
+      );
+      historyDispatcher.push(seletedRectangleRef.current);
+    } else {
+      cacheSizeRef.current = size
+    }
+  });
+
+  const onColor = useMemoizedFn((color: string) => {
+    if (getColor() === color) return;
+    setColor(color);
+
+    if (!checked) return;
+    if (seletedRectangleRef.current) {
+      seletedRectangleRef.current.data.color = color;
+      seletedRectangleRef.current.source.editHistory.push(
+        seletedRectangleRef.current
+      );
+      historyDispatcher.push(seletedRectangleRef.current);
+    } else {
+      cacheColorRef.current = color
+    }
+  });
+
+  const onDel = useMemoizedFn(() => { 
+    if (!checked) return;
+    if (seletedRectangleRef.current) {
+      seletedRectangleRef.current.data.isDel = true
+      seletedRectangleRef.current.source.editHistory.push(seletedRectangleRef.current)
+      historyDispatcher.push(seletedRectangleRef.current)
+      setTimeout(() => {
+        historyDispatcher.clearSelect()
+      }, 50);
+    }
+  })
+
   useDrawSelect(onDrawSelect)
   useCanvasMousedown(onMousedown)
   useCanvasMousemove(onMousemove)
   useCanvasMouseup(onMouseup)
+  useCanvasKeyboardDel(onDel)
 
   return (
     <ScreenshotsButton
@@ -239,7 +344,7 @@ export default function Ellipse (): ReactElement {
       icon='icon-ellipse'
       checked={checked}
       onClick={onSelectEllipse}
-      option={<ScreenshotsSizeColor size={size} color={color} onSizeChange={setSize} onColorChange={setColor} />}
+      option={<ScreenshotsSizeColor size={size} color={color} onSizeChange={onSize} onColorChange={onColor} />}
     />
   )
 }

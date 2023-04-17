@@ -31,9 +31,6 @@ export default function App (): ReactElement {
         url={imageUrl}
         width={window.innerWidth}
         height={window.innerHeight}
-        lang={{
-          operation_rectangle_title: 'Rectangle'
-        }}
         onSave={onSave}
         onCancel={onCancel}
         onOk={onOk}

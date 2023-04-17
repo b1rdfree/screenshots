@@ -19,6 +19,7 @@ export interface ScreenshotsContextStore {
 export interface ScreenshotsContextDispatcher {
   call?: <T>(funcName: string, ...args: T[]) => void
   setHistory?: Dispatch<SetStateAction<History>>
+  getHistory?: () => History
   setBounds?: Dispatch<SetStateAction<Bounds | null>>
   setCursor?: Dispatch<SetStateAction<string | undefined>>
   setOperation?: Dispatch<SetStateAction<string | undefined>>
@@ -49,6 +50,7 @@ export default React.createContext<ScreenshotsContextValue>({
   dispatcher: {
     call: undefined,
     setHistory: undefined,
+    getHistory: undefined,
     setBounds: undefined,
     setCursor: undefined,
     setOperation: undefined

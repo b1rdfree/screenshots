@@ -3,7 +3,9 @@ import { HistoryItemSource } from '../../types'
 import { drawDragCircle } from '../utils'
 
 export function getEditedEllipseData (action: HistoryItemSource<EllipseData, EllipseEditData>) {
-  let { x1, y1, x2, y2 } = action.data
+  let { color, size, x1, y1, x2, y2 } = action.data
+
+  let isDel = false
 
   action.editHistory.forEach(({ data }) => {
     const x = data.x2 - data.x1
@@ -34,10 +36,16 @@ export function getEditedEllipseData (action: HistoryItemSource<EllipseData, Ell
       x1 += x
       y1 += y
     }
+    size = data.size ? data.size : size
+    color = data.color ? data.color : color
+    isDel = data.isDel
   })
 
   return {
     ...action.data,
+    isDel,
+    size,
+    color,
     x1,
     x2,
     y1,
@@ -46,7 +54,10 @@ export function getEditedEllipseData (action: HistoryItemSource<EllipseData, Ell
 }
 
 export default function draw (ctx: CanvasRenderingContext2D, action: HistoryItemSource<EllipseData, EllipseEditData>) {
-  const { size, color, x1, y1, x2, y2 } = getEditedEllipseData(action)
+  const { size, color, isDel, x1, y1, x2, y2 } = getEditedEllipseData(action)
+
+  if(isDel) return
+
   ctx.lineCap = 'butt'
   ctx.lineJoin = 'miter'
   ctx.lineWidth = size
