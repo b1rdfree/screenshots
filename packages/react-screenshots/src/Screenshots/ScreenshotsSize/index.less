@@ -4,17 +4,17 @@
   height: @sizecolor-size;
   display: flex;
   align-items: center;
+  gap: 6px;
 
   &-item {
     width: @sizecolor-size;
     height: @sizecolor-size;
     position: relative;
-    margin: 0 3px;
     cursor: pointer;
   }
 
   &-pointer {
-    background-color: #555;
+    background-color: #CCD2DE;
     border-radius: 50%;
     position: absolute;
     top: 50%;
@@ -23,6 +23,6 @@
   }
 
   &-active > &-pointer {
-    background-color: #39f;
+    background-color: @active-color;
   }
 }

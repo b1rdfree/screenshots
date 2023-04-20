@@ -1,6 +1,12 @@
 import React, { memo, ReactElement } from 'react'
 import './index.less'
 
+const infoToSizes: Record<number, number> = {
+  3: 8,
+  6: 12,
+  9: 16,
+}
+
 export interface SizeProps {
   value: number
   onChange: (value: number) => void
@@ -22,8 +28,8 @@ export default memo(function ScreenshotsSize ({ value, onChange }: SizeProps): R
             <div
               className='screenshots-size-pointer'
               style={{
-                width: size * 1.8,
-                height: size * 1.8
+                width: infoToSizes[size],
+                height: infoToSizes[size]
               }}
             />
           </div>

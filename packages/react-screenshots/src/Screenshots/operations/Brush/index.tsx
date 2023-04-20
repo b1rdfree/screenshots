@@ -40,8 +40,8 @@ export default function Brush (): ReactElement {
   const [history, historyDispatcher] = useHistory()
   const [size, setSize, getSize] = useGetState(3)
   const cacheSizeRef = useRef<number>(3)
-  const [color, setColor, getColor] = useGetState('#ee5126')
-  const cacheColorRef = useRef<string>("#ee5126")
+  const [color, setColor, getColor] = useGetState('#F6544A')
+  const cacheColorRef = useRef<string>("#F6544A")
   const brushRef = useRef<HistoryItemSource<BrushData, BrushEditData> | null>(null)
   const brushEditRef = useRef<HistoryItemEdit<BrushEditData, BrushData> | null>(null)
 
@@ -264,6 +264,7 @@ export default function Brush (): ReactElement {
 
   return (
     <ScreenshotsButton
+      type='brush'
       title={lang.operation_brush_title}
       icon='icon-brush'
       checked={checked}

@@ -56,8 +56,8 @@ export default function Rectangle (): ReactElement {
   const canvasContextRef = useCanvasContextRef()
   const [size, setSize, getSize] = useGetState(3)
   const cacheSizeRef = useRef<number>(3)
-  const [color, setColor, getColor] = useGetState('#ee5126')
-  const cacheColorRef = useRef<string>("#ee5126")
+  const [color, setColor, getColor] = useGetState('#F6544A')
+  const cacheColorRef = useRef<string>("#F6544A")
   const rectangleRef = useRef<HistoryItemSource<RectangleData, RectangleEditData> | null>(null)
   const rectangleEditRef = useRef<HistoryItemEdit<RectangleEditData, RectangleData> | null>(null)
 
@@ -336,6 +336,7 @@ export default function Rectangle (): ReactElement {
 
   return (
     <ScreenshotsButton
+      type='rectangle'
       title={lang.operation_rectangle_title}
       icon='icon-rectangle'
       checked={checked}

@@ -213,6 +213,7 @@ export default function Mosaic (): ReactElement {
 
   return (
     <ScreenshotsButton
+      type='mosaic'
       title={lang.operation_mosaic_title}
       icon='icon-mosaic'
       checked={checked}

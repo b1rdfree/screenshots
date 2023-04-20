@@ -50,8 +50,8 @@ export default function Arrow (): ReactElement {
   const canvasContextRef = useCanvasContextRef()
   const [size, setSize, getSize] = useGetState(3)
   const cacheSizeRef = useRef<number>(3)
-  const [color, setColor, getColor] = useGetState('#ee5126')
-  const cacheColorRef = useRef<string>("#ee5126")
+  const [color, setColor, getColor] = useGetState('#F6544A')
+  const cacheColorRef = useRef<string>("#F6544A")
   const arrowRef = useRef<HistoryItemSource<ArrowData, ArrowEditData> | null>(null)
   const arrowEditRef = useRef<HistoryItemEdit<ArrowEditData, ArrowData> | null>(null)
 
@@ -289,6 +289,7 @@ export default function Arrow (): ReactElement {
 
   return (
     <ScreenshotsButton
+      type='arrow'
       title={lang.operation_arrow_title}
       icon='icon-arrow'
       checked={checked}

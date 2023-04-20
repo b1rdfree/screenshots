@@ -13,6 +13,7 @@ export default function Undo (): ReactElement {
 
   return (
     <ScreenshotsButton
+      type='undo'
       title={lang.operation_undo_title}
       icon='icon-undo'
       disabled={history.index === -1}

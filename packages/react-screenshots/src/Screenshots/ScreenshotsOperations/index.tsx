@@ -9,7 +9,7 @@ import { useGetState } from 'ahooks'
 export const ScreenshotsOperationsCtx = React.createContext<Bounds | null>(null)
 
 export default memo(function ScreenshotsOperations (): ReactElement | null {
-  const { width, height } = useStore()
+  const { width: bodyWidth, height: bodyHeight } = useStore()
   const [bounds] = useBounds()
   const [operationsRect, setOperationsRect] = useState<Bounds | null>(null)
   const [position, setPosition, getPosition] = useGetState<Position | null>(null)
@@ -31,23 +31,8 @@ export default memo(function ScreenshotsOperations (): ReactElement | null {
     }
 
     const elRect = elRef.current.getBoundingClientRect()
-
-    let x = bounds.x + bounds.width - elRect.width
-    let y = bounds.y + bounds.height + 10
-
-    if (x < 0) {
-      x = 0
-    }
-
-    if (x > width - elRect.width) {
-      x = width - elRect.width
-    }
-
-    if (y > height - elRect.height) {
-      y = height - elRect.height - 10
-    }
-
-
+    const placement = (bounds.y - elRect.y) > 0 ? "top" : "bottom"
+    
     // 小数存在精度问题
     if (
       !operationsRect ||
@@ -60,7 +45,8 @@ export default memo(function ScreenshotsOperations (): ReactElement | null {
         x: elRect.x,
         y: elRect.y,
         width: elRect.width,
-        height: elRect.height
+        height: elRect.height,
+        position: placement
       })
     }
   })
@@ -70,21 +56,24 @@ export default memo(function ScreenshotsOperations (): ReactElement | null {
 
     if (bounds) {
       if (getPosition()) setPosition(null);
-      const opWrapperWidth = 342;
-      const opWrapperHeight = 34;
+      const opWrapperWidth = 382;
+      const opWrapperHeight = 45;
       const { x, y, width, height, type } = bounds;
 
       let top: number = 0;
       let left: number = 0;
 
-      if (document.body.clientHeight - y - height > opWrapperHeight + 10) {
-        top = y + height + 10;
+      if (bodyHeight - y - height > opWrapperHeight + 8) {
+        top = y + height + 8;
       } else {
-        top = y - 10 - opWrapperHeight;
+        top = y - 8 - opWrapperHeight;
       }
 
-      if((document.body.clientHeight - height) < opWrapperHeight){
-        top = y + height - 10 -opWrapperHeight
+      if (
+        y < opWrapperHeight + 8 &&
+        bodyHeight - y - height < opWrapperHeight + 8
+      ) {
+        top = y + height - 8 - opWrapperHeight;
       }
 
       if (x + width < opWrapperWidth) {
@@ -103,7 +92,7 @@ export default memo(function ScreenshotsOperations (): ReactElement | null {
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, [bounds]);
+  }, [bounds, bodyWidth, bodyHeight]);
 
 
   if (!bounds) {

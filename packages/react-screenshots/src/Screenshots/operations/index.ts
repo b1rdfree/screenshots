@@ -1,6 +1,6 @@
 import Ok from './Ok'
 import Cancel from './Cancel'
-import Save from './Save'
+// import Save from './Save'
 import Redo from './Redo'
 import Undo from './Undo'
 import Mosaic from './Mosaic'

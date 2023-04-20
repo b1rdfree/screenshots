@@ -3,27 +3,29 @@
 .screenshots-button {
   width: @button-size;
   height: @button-size;
-  line-height: @button-size;
-  color: #333;
-  font-size: 18px;
-  text-align: center;
-  margin: 0 3px;
-  vertical-align: middle;
+  color: #31343F;
   cursor: pointer;
+  border-radius: 4px;
 
-  &-checked,
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   &:hover {
-    background-color: #eee;
-    outline: 1px solid #777;
+    background-color: #F0F1F3;
+  }
+
+  &-checked {
+    background-color: #F0F1F3;
+    color: #F28B44;
   }
 
   &-disabled {
-    color: #bbb;
+    color: #CCD2DE;
     cursor: not-allowed;
 
     &:hover {
       background-color: #fff;
-      outline: none;
     }
   }
 }

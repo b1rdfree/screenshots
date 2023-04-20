@@ -6,12 +6,15 @@
   top: 0;
   will-change: transform;
 
+  border: 0.5px solid #EAECF3;
+  box-shadow: 0px 2px 4px rgba(133, 137, 158, 0.2);
+  border-radius: 4px;
+
   &-buttons {
     display: flex;
     align-items: center;
-    padding: 3px;
-    border-radius: 2px;
-    border: 1px solid #ddd;
+    gap: 6px;
+    padding: 8px 16px;
     background-color: #fff;
     overflow: hidden;
   }
@@ -20,6 +23,5 @@
     background-color: #ddd;
     width: 1px;
     height: @button-size;
-    margin: 0 3px;
   }
 }

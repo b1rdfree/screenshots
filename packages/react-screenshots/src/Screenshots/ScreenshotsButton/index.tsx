@@ -7,8 +7,10 @@ import React, {
 } from 'react'
 import ScreenshotsOption from '../ScreenshotsOption'
 import './index.less'
+import { Icons } from './icon';
 
 export interface ScreenshotsButtonProps {
+  type: string;
   title: string;
   icon: string;
   checked?: boolean;
@@ -18,6 +20,7 @@ export interface ScreenshotsButtonProps {
 }
 
 export default memo(function ScreenshotsButton ({
+  type,
   title,
   icon,
   checked,
@@ -45,13 +48,13 @@ export default memo(function ScreenshotsButton ({
   }
 
   return (
-    <ScreenshotsOption open={checked} content={option}>
+    <ScreenshotsOption type={type} open={checked} content={option}>
       <div
         className={classNames.join(' ')}
         title={title}
         onClick={onButtonClick}
       >
-        <span className={icon} />
+        {Icons[icon]}
       </div>
     </ScreenshotsOption>
   )

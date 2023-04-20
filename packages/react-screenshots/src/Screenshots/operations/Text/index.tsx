@@ -194,8 +194,8 @@ export default function Text (): ReactElement {
   const canvasContextRef = useCanvasContextRef()
   const [size, setSize, getSize] = useGetState(3)
   const cacheSizeRef = useRef<number>(3)
-  const [color, setColor, getColor] = useGetState('#ee5126')
-  const cacheColorRef = useRef<string>("#ee5126")
+  const [color, setColor, getColor] = useGetState('#F6544A')
+  const cacheColorRef = useRef<string>("#F6544A")
   const textRef = useRef<HistoryItemSource<TextData, TextEditData> | null>(
     null
   )
@@ -548,6 +548,7 @@ export default function Text (): ReactElement {
   return (
     <>
       <ScreenshotsButton
+        type='text'
         title={lang.operation_text_title}
         icon='icon-text'
         checked={checked}

@@ -13,6 +13,7 @@ export default function Redo (): ReactElement {
 
   return (
     <ScreenshotsButton
+      type='redo'
       title={lang.operation_redo_title}
       icon='icon-redo'
       disabled={!history.stack.length || history.stack.length - 1 === history.index}

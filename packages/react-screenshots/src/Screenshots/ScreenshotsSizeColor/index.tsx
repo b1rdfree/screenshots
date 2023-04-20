@@ -19,6 +19,7 @@ export default memo(function ScreenshotsSizeColor ({
   return (
     <div className='screenshots-sizecolor'>
       <ScreenshotsSize value={size} onChange={onSizeChange} />
+      <div className='screenshots-sizecolor-divider'></div>
       <ScreenshotsColor value={color} onChange={onColorChange} />
     </div>
   )

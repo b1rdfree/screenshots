@@ -56,8 +56,8 @@ export default function Ellipse (): ReactElement {
   const canvasContextRef = useCanvasContextRef()
   const [size, setSize, getSize] = useGetState(3)
   const cacheSizeRef = useRef<number>(3)
-  const [color, setColor, getColor] = useGetState('#ee5126')
-  const cacheColorRef = useRef<string>("#ee5126")
+  const [color, setColor, getColor] = useGetState('#F6544A')
+  const cacheColorRef = useRef<string>("#F6544A")
   const ellipseRef = useRef<HistoryItemSource<EllipseData, EllipseEditData> | null>(null)
   const ellipseEditRef = useRef<HistoryItemEdit<EllipseEditData, EllipseData> | null>(null)
 
@@ -340,6 +340,7 @@ export default function Ellipse (): ReactElement {
 
   return (
     <ScreenshotsButton
+      type='ellipse'
       title={lang.operation_ellipse_title}
       icon='icon-ellipse'
       checked={checked}

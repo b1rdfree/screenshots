@@ -49,6 +49,7 @@ export interface Bounds {
   width: number
   height: number
   type?: string
+  position?: string
 }
 
 export type Position = Point
