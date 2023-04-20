@@ -3,6 +3,7 @@ import Screenshots from '../Screenshots'
 import { Bounds } from '../Screenshots/types'
 import { Lang } from '../Screenshots/zh_CN'
 import './app.less'
+import { useKeyPress } from 'ahooks'
 
 export interface Display {
   id: number
@@ -83,6 +84,15 @@ export default function App (): JSX.Element {
       window.removeEventListener('resize', onResize)
     }
   }, [onCancel])
+
+  useKeyPress(
+    () => true,
+    (e) => {
+      if (e.code === 'Escape') {
+        window.screenshots.keyboardEsc()
+      }
+    }
+  )
 
   return (
     <div className='body'>

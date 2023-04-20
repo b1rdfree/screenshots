@@ -3,6 +3,7 @@ import Screenshots from '../Screenshots'
 import { Bounds } from '../Screenshots/types'
 import './app.less'
 import imageUrl from './image.jpg'
+import { useKeyPress } from 'ahooks'
 
 export default function App (): ReactElement {
   const onSave = useCallback((blob: Blob | null, bounds: Bounds) => {
@@ -24,6 +25,15 @@ export default function App (): ReactElement {
       window.open(url)
     }
   }, [])
+
+  useKeyPress(
+    () => true,
+    (e) => {
+      if (e.code === 'Escape') {
+        window.screenshots.keyboardEsc()
+      }
+    }
+  )
 
   return (
     <div className='body'>

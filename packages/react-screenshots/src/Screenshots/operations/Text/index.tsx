@@ -208,6 +208,10 @@ export default function Text (): ReactElement {
   const [text, setText] = useState<string>('')
 
   const mouseXYRef = useRef<number[]>([0,0])
+  const seletedRectangleRef = useRef<HistoryItemEdit<
+    TextEditData,
+    TextData
+  > | null>(null);
 
   const checked = operation === 'Text'
 
@@ -444,10 +448,6 @@ export default function Text (): ReactElement {
     }
   }, [checked, textareaBounds])
 
-  const seletedRectangleRef = useRef<HistoryItemEdit<
-    TextEditData,
-    TextData
-  > | null>(null);
   useEffect(() => {
     const arr = history.stack
       .filter((item) => item.type === HistoryItemType.Source)

@@ -28,6 +28,11 @@ contextBridge.exposeInMainWorld('screenshots', {
 
     ipcRenderer.send('SCREENSHOTS:ready');
   },
+  keyboardEsc: () => {
+    console.log('contextBridge keyboardEsc');
+
+    ipcRenderer.send('SCREENSHOTS:keyboardEsc');
+  },
   reset: () => {
     console.log('contextBridge reset');
 
