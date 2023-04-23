@@ -16,7 +16,6 @@ interface GlobalScreenshots {
   ok: (arrayBuffer: ArrayBuffer, data: ScreenshotsData) => void
   on: (channel: string, fn: ScreenshotsListener) => void
   off: (channel: string, fn: ScreenshotsListener) => void
-  keyboardEsc: () => void
 }
 
 declare global {

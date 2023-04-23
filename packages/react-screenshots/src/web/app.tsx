@@ -26,15 +26,6 @@ export default function App (): ReactElement {
     }
   }, [])
 
-  useKeyPress(
-    () => true,
-    (e) => {
-      if (e.code === 'Escape') {
-        window.screenshots.keyboardEsc()
-      }
-    }
-  )
-
   return (
     <div className='body'>
       <Screenshots

@@ -85,15 +85,6 @@ export default function App (): JSX.Element {
     }
   }, [onCancel])
 
-  useKeyPress(
-    () => true,
-    (e) => {
-      if (e.code === 'Escape') {
-        window.screenshots.keyboardEsc()
-      }
-    }
-  )
-
   return (
     <div className='body'>
       <Screenshots
